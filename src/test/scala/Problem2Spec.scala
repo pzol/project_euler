@@ -1,3 +1,4 @@
+import scala.math.BigInt
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
@@ -14,7 +15,10 @@ class Problem2Spec extends FlatSpec with ShouldMatchers {
     def fib_(max: Long) = (1L until max).foldLeft(1L :: 1L :: Nil) { (sum,_) => (sum.head + sum.tail.head) :: sum }.reverse
     fib_(10) should be === List(1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89)
 
-    var fib = 1 :: 1 :: Nil; while(fib.head < 4000000) { fib = (fib.head + fib.tail.head) :: fib }
+    var fib = 0 :: 1 :: Nil; while(fib.head < 4000000) { fib = (fib.head + fib.tail.head) :: fib }
     fib.tail.filter( _ % 2 == 0).sum should be === 4613732
+
+    lazy val fibs: Stream[BigInt] = BigInt(0) #:: BigInt(1) #:: fibs.zip(fibs.tail).map { n => n._1 + n._2 }
+    fibs.filter {_ % 2 == 0}.takeWhile {_ < 4000000}.sum should be === 4613732
   }
 }
